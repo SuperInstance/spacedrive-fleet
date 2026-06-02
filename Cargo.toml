@@ -1,0 +1,19 @@
+[package]
+name = "cocapn-fleet"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR FSL-1.1-ALv2"
+description = "Spacedrive × CoCapn: your file explorer is also a compute fleet manager"
+repository = "https://github.com/SuperInstance/spacedrive-fleet"
+keywords = ["spacedrive", "cocapn", "storage", "fleet", "migration"]
+categories = ["filesystem", "cloud-storage"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tracing = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+blake3 = "1.5"
