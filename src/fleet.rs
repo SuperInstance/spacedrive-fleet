@@ -111,6 +111,7 @@ pub struct FleetManager {
     /// Active handoffs keyed by source volume UUID.
     active_handoffs: HashMap<Uuid, StorageHandoff>,
     event_tx: Sender<FleetEvent>,
+    #[allow(dead_code)]
     event_rx: Option<Receiver<FleetEvent>>,
     /// Snapshot of known volumes (by UUID).
     volumes: HashMap<Uuid, Arc<Volume>>,
@@ -167,15 +168,13 @@ impl FleetManager {
 
         // Update stripe with current free space
         for vol in &volumes {
-            if let Some(profile) = self
+            // Profile existence verified; free space updates deferred
+            // (stripe profiles are immutable after creation in current design)
+            let _ = self
                 .stripe
                 .healthy_volumes_in_tier(classify_volume_tier(vol.volume_type))
                 .into_iter()
-                .find(|p| p.volume_id == vol.id)
-            {
-                // Profile exists — just update free space in a future iteration
-                // (stripe profiles are immutable after creation in current design)
-            }
+                .find(|p| p.volume_id == vol.id);
         }
 
         let mut events = Vec::new();
@@ -209,8 +208,8 @@ impl FleetManager {
                 EscalationAction::Migrate {
                     from_volume,
                     to_volume,
-                    from_tier,
-                    to_tier,
+                    from_tier: _,
+                    to_tier: _,
                     total_bytes,
                 } => {
                     let from_name = self

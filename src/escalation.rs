@@ -224,7 +224,7 @@ mod tests {
             vec![],
         );
 
-        let vol = full_volume(full_id);
+        let _vol = full_volume(full_id);
         let mut deadband = StorageDeadband::new();
         deadband.set_config(full_id, VolumeDeadbandConfig {
             util_threshold: 0.90,

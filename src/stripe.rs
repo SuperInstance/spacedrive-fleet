@@ -53,8 +53,15 @@ pub enum StorageStripeEvent {
 pub struct StorageStripe {
     /// All tier profiles keyed by volume UUID.
     profiles: HashMap<Uuid, TierProfile>,
-    /// Ordered tier list for fallback.
+    /// Ordered tier list for fallback (used implicitly by fallback_path_for).
+    #[allow(dead_code)]
     tier_order: Vec<StorageTier>,
+}
+
+impl Default for StorageStripe {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl StorageStripe {
@@ -125,7 +132,7 @@ impl StorageStripe {
                 .values()
                 .filter(|p| p.storage_tier == *tier && p.healthy)
                 .collect();
-            tier_vols.sort_by(|a, b| b.free_bytes.cmp(&a.free_bytes));
+            tier_vols.sort_by_key(|b| std::cmp::Reverse(b.free_bytes));
             for p in tier_vols {
                 path.push(p.volume_id);
             }

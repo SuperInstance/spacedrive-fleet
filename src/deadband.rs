@@ -96,6 +96,12 @@ pub struct StorageDeadband {
     has_fired: RwLock<bool>,
 }
 
+impl Default for StorageDeadband {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl StorageDeadband {
     pub fn new() -> Self {
         Self {
